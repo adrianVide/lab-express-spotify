@@ -1,0 +1,26 @@
+/* * {
+    margin: 0px;
+} */
+
+body {
+    background-color: snow;
+}
+
+.bg-spot {
+    background-image: url('/images/spotify-background.jpeg');
+    background-size: cover;
+}
+
+#search-form {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.spot-color {
+    background-color: rgb(42, 184, 89);
+    color: white;   
+}
+
+.row {
+    margin-right: 0px;
+    margin-left: 0px;
+}
