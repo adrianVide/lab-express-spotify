@@ -1,0 +1,34 @@
+
+{{!-- <div class="cards-container col-12 d-flex row justify-content-center">
+    {{#each trItems}}
+    {{> trCard this}}
+    {{/each}}
+</div> --}}
+
+
+<table class="p-5 table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Title</th>
+      <th scope="col">Listen</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+      {{#each trItems}}
+    <tr>
+      <th scope="row">{{this.name}}</th>
+      <td><figure>
+    <figcaption>Preview: {{this.name}}</figcaption>
+    <audio
+        controls
+        src="{{this.preview_url}}">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>
+</figure></td>
+      
+    </tr>
+    {{/each}}
+  </tbody>
+</table>

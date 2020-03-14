@@ -52,6 +52,42 @@ app.get("/artist-search", (req, res, next) => {
     );
 });
 
+
+
+// app.get("/albums-search/:id", (req, res, next) => {
+//   spotifyApi
+//     .getArtistAlbums(req.params.id)
+//     .then(data => {
+//       console.log(data);
+//       let alItems = data[0].body.albums.items;
+//       console.log("The received data from the API: ", alItems);
+//       res.render("album-search", {alItems});
+
+//       // ----> 'HERE WHAT WE WANT TO DO AFTER RECEIVING THE DATA FROM THE API'
+//     })
+//     .catch(err =>
+//       console.log("The error while searching artists occurred: ", err)
+//     );
+// });
+
+app.get('/album-search/:id', (req, res) => {
+  spotifyApi.getArtistAlbums(req.params.id)
+  .then(albums => {
+    res.render('album-search',{ alItems: albums.body.items })
+})
+.catch(error => console.log(error));
+})
+
 app.listen(3000, () =>
   console.log("My Spotify project running on port 3000 🎧 🥁 🎸 🔊")
 );
+
+app.get('/track/:id', (req, res) => {
+  spotifyApi.getAlbumTracks(req.params.id)
+  .then(tracks => {
+    console.log(tracks);
+    trItems = tracks.body.items;
+    res.render('tracks',{trItems})
+})
+.catch(error => console.log(error));
+})
