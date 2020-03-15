@@ -1,12 +1,17 @@
-<div class='bg-spot' style="height: 800px;">
-    <div>
-        <form id='search-form' class='form' action="/artist-search">
+<div class='d-flex justify-content-center bg-spot' style="height: 800px;">
+    {{!-- <div class="d-flex h-50 justify-content-center align-self-center row my-auto">
+        <form id='search-form' class='align-self-center form' action="/artist-search">
             <label for="name-input">Artist:</label>
             <input id="name-input" type="text" name="artist">
             <button type="submit">Search!
             </button>
 
         </form>
-    </div>
+    </div> --}}
+
+    <form id='search-form' class="form-inline md-form mr-auto mb-4 justify-content-center align-self-center" style='height: 10vw; width: 100%;' action="/artist-search">
+  <input id="name-input" type="text" name="artist" class="form-control mr-sm-2" placeholder="Spotify artist search" aria-label="Search">
+  <button class="btn align-text-bottom btn-outline-light" type="submit">Go!</button>
+</form>
 
 </div>
