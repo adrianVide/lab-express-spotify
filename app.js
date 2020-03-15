@@ -74,7 +74,8 @@ app.get("/album-search/:id", (req, res) => {
     .then(albums => {
       alItems = albums.body.items;
     //  console.log(alItems);
-    spotifyApi.getArtist(req.params.id)
+    spotifyApi
+    .getArtist(req.params.id)
     .then(artist => {
       console.log(artist.body.name)
       artistName = artist.body.name
@@ -84,22 +85,7 @@ app.get("/album-search/:id", (req, res) => {
     .catch(error => console.log(error));
 });
 
-app.get("/album-search/:id", (req, res) => {
-  
-     spotifyApi.getArtist(req.params.id)
-     .then(artist => {
-       artist = data.body;
-      //  console.log('Artist information'+ artist);
-       res.render("album-search", { artist });
-      }, function(err) {
-        console.error(err);
-  });
-    
-});
 
-app.listen(3000, () =>
-  console.log("My Spotify project running on port 3000 🎧 🥁 🎸 🔊")
-);
 
 app.get("/track/:id", (req, res) => {
   spotifyApi
@@ -107,7 +93,19 @@ app.get("/track/:id", (req, res) => {
     .then(tracks => {
     //  console.log(tracks);
       trItems = tracks.body.items;
-      res.render("tracks", { trItems });
+      spotifyApi
+      .getAlbum(req.params.id)
+      .then(album => {
+        albumName = album.body.name;
+        console.log(albumName)
+        res.render("tracks", { trItems, albumName });
+    })
     })
     .catch(error => console.log(error));
 });
+
+
+app.listen(3000, () =>
+  console.log("My Spotify project running on port 3000 🎧 🥁 🎸 🔊")
+);
+
