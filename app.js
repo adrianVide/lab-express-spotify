@@ -8,24 +8,24 @@ const SpotifyWebApi = require("spotify-web-api-node");
 
 const app = express();
 
+hbs.registerPartials(__dirname + "/views/partials");
 app.set("view engine", "hbs");
 app.set("views", __dirname + "/views");
 app.use(express.static(__dirname + "/public"));
-hbs.registerPartials(__dirname + "/views/partials");
 
 // setting the spotify-api goes here:
 
 const spotifyApi = new SpotifyWebApi({
   clientId: process.env.CLIENT_ID,
   clientSecret: process.env.CLIENT_SECRET,
-  redirectUri: "http://localhost:3000"
+  redirectUri: "http://localhost:3000",
 });
 
 // Retrieve an access token
 spotifyApi
   .clientCredentialsGrant()
-  .then(data => spotifyApi.setAccessToken(data.body["access_token"]))
-  .catch(error =>
+  .then((data) => spotifyApi.setAccessToken(data.body["access_token"]))
+  .catch((error) =>
     console.log("Something went wrong when retrieving an access token", error)
   );
 
@@ -39,15 +39,15 @@ app.get("/artist-search", (req, res, next) => {
   spotifyApi
     .searchArtists(req.query.artist)
     // console.log(req.query.artist)
-    .then(data => {
+    .then((data) => {
       let artItems = data.body.artists.items;
-      console.log("The received data from the API: ", artItems);
+      // console.log("The received data from the API: ", artItems);
       res.render("artist-search", { artItems });
 
       // ----> 'HERE WHAT WE WANT TO DO AFTER RECEIVING THE DATA FROM THE API'
     })
 
-    .catch(err =>
+    .catch((err) =>
       console.log("The error while searching artists occurred: ", err)
     );
 });
@@ -71,38 +71,84 @@ app.get("/artist-search", (req, res, next) => {
 app.get("/album-search/:id", (req, res) => {
   spotifyApi
     .getArtistAlbums(req.params.id)
-    .then(albums => {
+    .then((albums) => {
       alItems = albums.body.items;
       //  console.log(alItems);
-      spotifyApi.getArtist(req.params.id).then(artist => {
+      spotifyApi.getArtist(req.params.id).then((artist) => {
         // console.log(artist.body.name);
         artistName = artist.body.name;
         res.render("album-search", { alItems, artistName });
       });
     })
-    .catch(error => console.log(error));
+    .catch((error) => console.log(error));
 });
 
-app.get("/track/:id", (req, res) => {
-  spotifyApi.getAlbumTracks(req.params.id).then(tracks => {
-    //  console.log(tracks);
-    trItems = tracks.body.items;
-    console.log(trItems);
+app.get("/track/:id", async (req, res) => {
+  // console.log(await spotifyApi.getAlbumTracks(req.params.id))
+  // console.log(req.params.id);
+  let tracks;
+  let album;
+  let artist;
+  await spotifyApi.getAlbumTracks(req.params.id).then((albumTracks) => {
+    // console.log(albumTracks);
+    tracks = albumTracks.body.items;
+    // albumTracks = albumTracks.body.items;
+    // console.log(albumTracks);
+    // trItems = spotifyApi.getAlbumTracks(req.params.id.body.items);
+    
+    
+    // artistName = spotifyApi.getArtist(req.params.id.body.name);
+    // res.render("tracks", { tracks, albumName, artistName });
+  });
+  await spotifyApi.getAlbum(req.params.id).then(albumName => {
+    album = albumName.body.name;
 
-    spotifyApi.getAlbum(req.params.id).then(album => {
-      albumName = album.body.name;
-      res.render("tracks", { trItems, albumName, albumName });
-      // console.log(album);
-      // spotifyApi
-      // .getArtist(req.params.id)
-      // .then(artist => {
-      //   // console.log(artist.body.name);
-      //   artistName = artist.body.name;
-      });
-    // });
-    })
-    .catch(error => console.log(error));
+    // console.log(album);
+  });
+  await spotifyApi.getAlbum(req.params.id).then(artistName => {
+    console.log(artistName.body.artists);
+    artist = artistName.body.artists;
+
+    // console.log(artist);
+  });
+  // console.log(tracks);
+  // console.log(await spotifyApi.getAlbum(req.params.id.body.name));
+  res.render("tracks", { tracks, album, artist });
 });
+// .catch(error => console.log(error));
+// } catch (err) {
+//   alert(err);
+
+// console.log(album);
+// spotifyApi
+// .getArtist(req.params.id)
+// .then(artist => {
+//   // console.log(artist.body.name);
+//   artistName = artist.body.name;
+// });
+// });
+// })
+
+// app.get("/track/:id", (req, res) => {
+//   spotifyApi.getAlbumTracks(req.params.id).then(tracks => {
+//     //  console.log(tracks);
+//     trItems = tracks.body.items;
+//     console.log(trItems);
+
+//     spotifyApi.getAlbum(req.params.id).then(album => {
+//       albumName = album.body.name;
+//       res.render("tracks", { trItems, albumName, albumName });
+//       // console.log(album);
+//       // spotifyApi
+//       // .getArtist(req.params.id)
+//       // .then(artist => {
+//       //   // console.log(artist.body.name);
+//       //   artistName = artist.body.name;
+//       });
+//     // });
+//     })
+//     .catch(error => console.log(error));
+// });
 
 app.listen(3000, () =>
   console.log("My Spotify project running on port 3000 🎧 🥁 🎸 🔊")

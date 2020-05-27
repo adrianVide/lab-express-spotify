@@ -1,14 +1,11 @@
 
-{{!-- <div class="cards-container col-12 d-flex row justify-content-center">
-    {{#each trItems}}
-    {{> trCard this}}
-    {{/each}}
-</div> --}}
 
-<div class="d-flex justify-content-center m-5">
-    <h1 class="">{{albumName}}</h1>
-    <h2>an album by:</h2>
-    <h1>{{artistName}}</h1>
+<div class="justify-content-center m-5">
+    <h1 class="row">{{album}}</h1>
+    <p>an album by:</p>
+    {{#each artist}}
+    <h2>{{this.name}}</h2>
+    {{/each}}
 </div>
 
 <table class="p-5 table">
@@ -20,7 +17,7 @@
     </tr>
   </thead>
   <tbody>
-      {{#each trItems}}
+      {{#each tracks}}
     <tr>
       <th scope="row">{{this.name}}</th>
       <td><figure>
